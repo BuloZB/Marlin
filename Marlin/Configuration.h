@@ -15,9 +15,7 @@
 // This determines the communication speed of the printer
 #define BAUDRATE 115200
 
-// 33  = RAMPS 1.3 / 1.4 (Power outputs: Extruder, Fan, Bed)
-// 639 = EMC01 (custom PCB assy for FirePick Delta, w/ATmega1284P)
-#define MOTHERBOARD 639 
+#define MOTHERBOARD 33 //RAMPS 1.4 (Power outputs: Extruder, Fan, Bed)
 
 // Define this to set a custom name for your generic Mendel,
  #define CUSTOM_MENDEL_NAME "FirePick Delta"
@@ -27,7 +25,7 @@
  #define MACHINE_UUID "22b35943-6c03-4683-ad3d-baddf20d9120"
 
 // This defines the number of extruders
-#define EXTRUDERS 2
+#define EXTRUDERS 1
 
 #define POWER_SUPPLY 1 //ATX
 
@@ -70,9 +68,9 @@
 // 110 is Pt100 with 1k pullup (non standard)
 
 #define TEMP_SENSOR_0 1
-#define TEMP_SENSOR_1 1
+#define TEMP_SENSOR_1 0
 #define TEMP_SENSOR_2 0
-#define TEMP_SENSOR_BED 0
+#define TEMP_SENSOR_BED 1
 
 // This makes temp sensor 1 a redundant sensor for sensor 0. If the temperatures difference between these sensors is to high the print will be aborted.
 //#define TEMP_SENSOR_1_AS_REDUNDANT
@@ -157,7 +155,7 @@
 // all forms of bed control obey this (PID, bang-bang, bang-bang with hysteresis)
 // setting this to anything other than 255 enables a form of PWM to the bed just like HEATER_BED_DUTY_CYCLE_DIVIDER did,
 // so you shouldn't use it unless you are OK with PWM on your bed.  (see the comment on enabling PIDTEMPBED)
-#define MAX_BED_POWER 255 // limits duty cycle to bed; 255=full current
+#define MAX_BED_POWER 220 // limits duty cycle to bed; 255=full current
 
 #ifdef PIDTEMPBED
 //120v 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
@@ -195,16 +193,16 @@
 // Make delta curves from many straight lines (linear interpolation).
 // This is a trade-off between visible corners (not enough segments)
 // and processor overload (too many expensive sqrt calls).
-#define DELTA_SEGMENTS_PER_SECOND 50
+#define DELTA_SEGMENTS_PER_SECOND 180
 
 #define DELTA_E         131.636 // End effector length
 #define DELTA_F         190.526 // Base length
 #define DELTA_RE        270.000 // Carbon rod length
 #define DELTA_RF         90.000 // Servo horn length
-//#define DELTA_Z_OFFSET  293.000 // Distance from delta 8mm rod/pulley to table/bed.
+#define DELTA_Z_OFFSET  290.700 // Distance from delta 8mm rod/pulley to table/bed. <- LERCHE 25-09-2014 uncommented
 
 //NOTE: For OpenPnP, set the zero to be about 25mm above the bed...
-#define DELTA_Z_OFFSET  268.000 // Distance from delta 8mm rod/pulley to table/bed.
+//#define DELTA_Z_OFFSET  268.000 // Distance from delta 8mm rod/pulley to table/bed. <- LERCHE 25-09-2014 commented
 
 
 #define DELTA_EE_OFFS    15.000 // Ball joint plane to bottom of end effector surface
@@ -213,7 +211,7 @@
 #define TOOL_OFFSET      30.500 // Distance between end effector ball joint plane and tip of tool (PnP)
 #define Z_CALC_OFFSET  ((DELTA_Z_OFFSET - TOOL_OFFSET - DELTA_EE_OFFS) * -1.0)
 
-#define Z_HOME_ANGLE    -67.200 // This is the angle where the arms hit the endstop sensor
+#define Z_HOME_ANGLE    -60.000 // This is the angle where the arms hit the endstop sensor
 #define Z_HOME_OFFS    (((DELTA_Z_OFFSET - TOOL_OFFSET - DELTA_EE_OFFS) - 182.002) - 0.5)
                                 // This is calculated from the above angle, after applying forward 
                                 // kinematics, and adding the Z calc offset to it.
@@ -397,9 +395,9 @@ const bool Z_MAX_ENDSTOP_INVERTING = false; // set to true to invert the logic o
 
 //For Delta configuration: Units are degrees! That is, steps per degree
 //#define DEFAULT_AXIS_STEPS_PER_UNIT   {80, 80, 80, 100}
-#define DEFAULT_AXIS_STEPS_PER_UNIT   {XYZ_STEPS, XYZ_STEPS, XYZ_STEPS, 8.8888}
-#define DEFAULT_MAX_FEEDRATE          {5000,      5000,      5000,      10000}    // (mm/sec)
-#define DEFAULT_MAX_ACCELERATION      {3000,      3000,      3000,      10000}    // X, Y, Z, E maximum start speed for accelerated moves. E default values are good for skeinforge 40+, for older versions raise them a lot.
+#define DEFAULT_AXIS_STEPS_PER_UNIT   {XYZ_STEPS, XYZ_STEPS, XYZ_STEPS, 310}
+#define DEFAULT_MAX_FEEDRATE          {5000, 5000, 5000, 10000}    // (mm/sec)
+#define DEFAULT_MAX_ACCELERATION      {3000,3000,3000,10000}    // X, Y, Z, E maximum start speed for accelerated moves. E default values are good for skeinforge 40+, for older versions raise them a lot.
 
 #define DEFAULT_ACCELERATION          3000//10000    // X, Y, Z and E max acceleration in mm/s^2 for printing moves
 #define DEFAULT_RETRACT_ACCELERATION  3000   // X, Y, Z and E max acceleration in mm/s^2 for retracts
@@ -479,16 +477,16 @@ const bool Z_MAX_ENDSTOP_INVERTING = false; // set to true to invert the logic o
 // leaving it undefined or defining as 0 will disable the servo subsystem
 // If unsure, leave commented / disabled
 //
-#define NUM_SERVOS 3 // Servo index starts with 0 for M280 command
+#define NUM_SERVOS 0 // Servo index starts with 0 for M280 command
 
 // Servo Endstops
 //
 // This allows for servo actuated endstops, primary usage is for the Z Axis to eliminate calibration or bed height changes.
 // Use M206 command to correct for switch height offset to actual nozzle height. Store that setting with M500.
 //
-#define SERVO_ENDSTOPS {-1, -1, 0} // Servo index for X, Y, Z. Disable with -1
-#define SERVO_ENDSTOP_ANGLES {0,0, 0,0, 174,90} // X,Y,Z Axis Extend and Retract angles
-
+//#define SERVO_ENDSTOPS {-1, -1, -1} // Servo index for X, Y, Z. Disable with -1
+//#define SERVO_ENDSTOP_ANGLES {0,0, 0,0, 174,90} // X,Y,Z Axis Extend and Retract angles <- LERCHE
+//#define SERVO_ENDSTOP_ANGLES {0,0, 0,0, 0,0} // X,Y,Z Axis Extend and Retract angles
 #include "Configuration_adv.h"
 #include "thermistortables.h"
 
