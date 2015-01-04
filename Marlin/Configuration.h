@@ -386,13 +386,19 @@ const bool Z_MAX_ENDSTOP_INVERTING = false; // set to true to invert the logic o
 #define HOMING_FEEDRATE {75*60, 75*60, 75*60, 0}  // set the homing speeds (mm/min)
 
 // default settings
-
-//#define DEGREES_PER_STEP 360.0/(STEPS_PER_REV/MICROSTEPPING)/PULLEY_REDUCTION
+#define BELT_THICKNESS 1.49  // thickest part of belt
+#define TOOTH_DEPTH 0.74     // thinnest part of the belt
 #define XYZ_FULL_STEPS_PER_ROTATION 200.0
 #define XYZ_MICROSTEPS 16.0
 #define SMALL_PULLEY_TEETH 16.0
 #define BIG_PULLEY_TEETH 150.0
-#define PULLEY_REDUCTION BIG_PULLEY_TEETH/SMALL_PULLEY_TEETH
+#define TOOTH_SPACING 2.0   // 2mm for GT2 belts
+
+// recalculate circumference to take into account tooth thickness, as this adds to the radius of the pulley
+#define BIG_PULLEY_CIRCUM BIG_PULLEY_TEETH*TOOTH_SPACING + (BELT_THICKNESS - TOOTH_DEPTH)*6.283185
+#define SMALL_PULLEY_CIRCUM SMALL_PULLEY_TEETH * TOOTH_SPACING
+
+#define PULLEY_REDUCTION BIG_PULLEY_CIRCUM/SMALL_PULLEY_CIRCUM
 #define XYZ_STEPS (XYZ_FULL_STEPS_PER_ROTATION*XYZ_MICROSTEPS*PULLEY_REDUCTION)/360.0
 
 //For Delta configuration: Units are degrees! That is, steps per degree
