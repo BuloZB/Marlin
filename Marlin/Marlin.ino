@@ -32,6 +32,7 @@
 
 #include "Configuration.h"
 #include "pins.h"
+#include <Adafruit_NeoPixel.h>
 
 #if defined(DIGIPOTSS_PIN) && DIGIPOTSS_PIN > -1
 #include <SPI.h>
@@ -40,3 +41,4 @@
 #if defined(DIGIPOT_I2C)
   #include <Wire.h>
 #endif
+

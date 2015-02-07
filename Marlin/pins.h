@@ -17,7 +17,7 @@
 // Stuff specific to FirePick Delta (most of this section is a hack)
 //***********************************
 //#define VACUUM_PIN         30 // Modular Tool #1 for now...
-//#define NEOPIXEL_PIN       16 //For LED ring light on end effector
+#define NEOPIXEL_PIN         10 //For LED ring light on end effector
 //#define SERVO0_PIN         11 //X [0]
 //#define SERVO1_PIN         6  //Y [1]
 //#define SERVO2_PIN         5  //Z [2]
