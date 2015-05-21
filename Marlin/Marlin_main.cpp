@@ -414,80 +414,43 @@ void servo_init()
   #endif
 }
 
-//// Input a value 0 to 255 to get a color value.
-//// The colours are a transition r - g - b - back to r.
-//uint32_t Wheel(byte WheelPos) {
-//  if(WheelPos < 85) {
-//   return ringLight.Color(WheelPos * 3, 255 - WheelPos * 3, 0);
-//  } else if(WheelPos < 170) {
-//   WheelPos -= 85;
-//   return ringLight.Color(255 - WheelPos * 3, 0, WheelPos * 3);
-//  } else {
-//   WheelPos -= 170;
-//   return ringLight.Color(0, WheelPos * 3, 255 - WheelPos * 3);
-//  }
-//}
-//
-//
-//void rainbow(uint8_t wait) {
-//  uint16_t i, j;
-//
-//  for(j=0; j<256; j++) {
-//    for(i=0; i<ringLight.numPixels(); i++) {
-//      ringLight.setPixelColor(i, Wheel((i+j) & 255));
-//    }
-//    ringLight.show();
-//    delay(wait);
-//  }
-//}
-//
-////Theatre-style crawling lights.
-//void theaterChase(uint32_t c, uint8_t wait) {
-//  for (int j=0; j<10; j++) {  //do 10 cycles of chasing
-//    for (int q=0; q < 3; q++) {
-//      for (int i=0; i < ringLight.numPixels(); i=i+3) {
-//        ringLight.setPixelColor(i+q, c);    //turn every third pixel on
-//      }
-//      ringLight.show();
-//     
-//      delay(wait);
-//     
-//      for (int i=0; i < ringLight.numPixels(); i=i+3) {
-//        ringLight.setPixelColor(i+q, 0);        //turn every third pixel off
-//      }
-//    }
-//  }
-//}
-//
-////Theatre-style crawling lights with rainbow effect
-//void theaterChaseRainbow(uint8_t wait) {
-//  for (int j=0; j < 256; j++) {     // cycle all 256 colors in the wheel
-//    for (int q=0; q < 3; q++) {
-//        for (int i=0; i < ringLight.numPixels(); i=i+3) {
-//          ringLight.setPixelColor(i+q, Wheel( (i+j) % 255));    //turn every third pixel on
-//        }
-//        ringLight.show();
-//       
-//        delay(wait);
-//       
-//        for (int i=0; i < ringLight.numPixels(); i=i+3) {
-//          ringLight.setPixelColor(i+q, 0);        //turn every third pixel off
-//        }
-//    }
-//  }
-//}
-//
-//void setRingColor(uint8_t r, uint8_t g, uint8_t b)
-//{
-//  for (int j=0; j<24; j++)
-//  {
-//    ringLight.setPixelColor(j, r, g, b);    //turn every third pixel on
-//  }
-//  ringLight.show();
-//}
+void setUpCamRingColor(uint8_t r, uint8_t g, uint8_t b)
+{
+  analogWrite(LEDRING_UP_PIN,r);
+}
+
+void setEffectorRingColor(uint8_t r, uint8_t g, uint8_t b)
+{
+  analogWrite(LEDRING_DN_PIN,r);
+}
 
 void setup()
 {
+  //FirePick Delta specific stuff
+  pinMode(VACUUM_PIN,OUTPUT);
+  pinMode(LEDRING_UP_PIN,OUTPUT);
+  pinMode(LEDRING_DN_PIN,OUTPUT);
+  pinMode(TOOL1_ENABLE_PIN,OUTPUT);
+  pinMode(TOOL2_ENABLE_PIN,OUTPUT);
+  pinMode(TOOL3_ENABLE_PIN,OUTPUT);
+  pinMode(TOOL4_ENABLE_PIN,OUTPUT);
+  pinMode(TOOL1_DOUT_PIN,OUTPUT);
+  pinMode(TOOL2_DOUT_PIN,OUTPUT);
+  pinMode(TOOL3_DOUT_PIN,OUTPUT);
+  pinMode(TOOL4_DOUT_PIN,OUTPUT);
+
+  digitalWrite(VACUUM_PIN,LOW);
+  digitalWrite(LEDRING_UP_PIN,LOW);
+  digitalWrite(LEDRING_DN_PIN,LOW);
+  digitalWrite(TOOL1_ENABLE_PIN,HIGH);
+  digitalWrite(TOOL2_ENABLE_PIN,HIGH);
+  digitalWrite(TOOL3_ENABLE_PIN,HIGH);
+  digitalWrite(TOOL4_ENABLE_PIN,HIGH);
+  digitalWrite(TOOL1_DOUT_PIN,LOW);
+  digitalWrite(TOOL2_DOUT_PIN,LOW);
+  digitalWrite(TOOL3_DOUT_PIN,LOW);
+  digitalWrite(TOOL4_DOUT_PIN,LOW);
+  
   setup_killpin();
   setup_powerhold();
   MYSERIAL.begin(BAUDRATE);
@@ -546,8 +509,6 @@ void setup()
     digipot_i2c_init();
   #endif
   
-  //FirePick Delta specific stuff
-  digitalWrite(VACUUM_PIN,LOW);
 //  ringLight.begin();
 //  //theaterChaseRainbow(5);
 //  setRingColor(0,0,0);
@@ -1389,6 +1350,16 @@ void process_commands()
     {
     }
     break;
+    case 10: //M10 Solder paste ON
+    {
+      digitalWrite(PASTE_PIN,HIGH);
+    }
+    break;
+    case 11: //M11 Solder paste OFF
+    {
+      digitalWrite(PASTE_PIN,LOW);
+    }
+    break;
     case 17: //M17 Enable/Power all stepper motors
         enable_x();
         enable_y();
@@ -2195,6 +2166,30 @@ void process_commands()
     }
     break;
 #endif
+    case 420: // M420 Set RGB LED color of  (currently used for end effector ring light)
+      {
+        uint8_t red=0;
+        uint8_t grn=0;
+        uint8_t blu=0;
+        //LED ring for end effector
+        if (code_seen('R')) {red=code_value_long(); }
+        if (code_seen('E')) {grn=code_value_long(); } //Note, the Green color is controlled by the E value instead of the G value due to the G code being a primary code that cannot be overridden.
+        if (code_seen('B')) {blu=code_value_long(); }
+        setEffectorRingColor(red, grn, blu);
+      }
+      break;
+    case 421: // M421 Set RGB LED color (currently used for up-looking ring light)
+      {
+        uint8_t red=0;
+        uint8_t grn=0;
+        uint8_t blu=0;
+        //LED ring for end effector
+        if (code_seen('R')) {red=code_value_long(); }
+        if (code_seen('E')) {grn=code_value_long(); } //Note, the Green color is controlled by the E value instead of the G value due to the G code being a primary code that cannot be overridden.
+        if (code_seen('B')) {blu=code_value_long(); }
+        setUpCamRingColor(red, grn, blu);
+      }
+      break;
     case 500: // M500 Store settings in EEPROM
     {
         Config_StoreSettings();

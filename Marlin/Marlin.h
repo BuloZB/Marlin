@@ -17,8 +17,6 @@
 #include <avr/eeprom.h>
 #include <avr/interrupt.h>
 
-#include <Adafruit_NeoPixel.h>
-
 
 #include "fastio.h"
 #include "Configuration.h"

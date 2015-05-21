@@ -13,81 +13,98 @@
 #define E1_MS2_PIN -1
 #define DIGIPOTSS_PIN -1
 
-//***********************************
-// Stuff specific to FirePick Delta
-//***********************************
-#define VACUUM_PIN         9 //Make sure FAN_PIN is disabled...
-#define NEOPIXEL_PIN       16 //For LED ring light on end effector
-#define SERVO0_PIN         11 //X [0]
-#define SERVO1_PIN         6  //Y [1]
-#define SERVO2_PIN         5  //Z [2]
-#define SERVO4_PIN         4  //  [3]
+//****************************************************************************************
+// FirePick Delta EMC02 (Rev B) pin assignment (custom shield for Arduino MEGA 2560)
+//****************************************************************************************
+#if MOTHERBOARD == 642 //EMC02 Rev B
+  #define KNOWN_BOARD 1
+  
+  #define LARGE_FLASH true
+  
+  //Delta Motor "X" ***********
+  #define X_STEP_PIN         38  // X is the BACK motor!
+  #define X_DIR_PIN          36
+  #define X_ENABLE_PIN       40
+  #define X_MIN_PIN          63 //A9
+  #define X_MAX_PIN          -1
+  
+  //Delta Motor "Y" ***********
+  #define Y_STEP_PIN         56 // Y is the FRONT LEFT motor! (NOTE: Analog pin A2 w/digital numbering)
+  #define Y_DIR_PIN          57 // (NOTE: Analog pin A7 w/digital numbering)
+  #define Y_ENABLE_PIN       54 // (NOTE: Analog pin A0 w/digital numbering)
+  #define Y_MIN_PIN          64 // (NOTE: Analog pin A10 w/digital numbering)
+  #define Y_MAX_PIN          -1
+  
+  //Delta Motor "Z" ***********
+  #define Z_STEP_PIN         9 //Z is the FRONT RIGHT motor!
+  #define Z_DIR_PIN          8
+  #define Z_ENABLE_PIN       2
+  #define Z_MIN_PIN          65 // (NOTE: Analog pin w/digital numbering)
+  #define Z_MAX_PIN          -1
+  
+  //Modular Tool Common ***********
+  #define TOOL_STEP_PIN      30
+  #define TOOL_DIR_PIN       32
+  #define E0_STEP_PIN        30
+  #define E0_DIR_PIN         32
+   
+  //Modular Tool #1 *********** //Heated bed
+  #define TOOL1_ENABLE_PIN   44
+  #define TOOL1_DOUT_PIN     42 
+  #define TOOL1_AIN_PIN      A12
 
-/****************************************************************************************
-* Arduino Mega pin assignment
-*
-****************************************************************************************/
-#define KNOWN_BOARD 1
+  #define HEATER_BED_PIN     42 // Heated bed
+  #define TEMP_BED_PIN       12 // A12 //ANALOG NUMBERING!!!
+  
+  //Modular Tool #2 *********** //3D printing extruder / hotend
+  #define TOOL2_ENABLE_PIN   52
+  #define TOOL2_DOUT_PIN     50
+  #define TOOL2_AIN_PIN      A13
 
-#define LARGE_FLASH true
+  //Modular Tool #3 *********** //SMT paste extruder
+  #define TOOL3_ENABLE_PIN   24
+  #define TOOL3_DOUT_PIN     22
+  #define TOOL3_AIN_PIN      A15
+  #define PASTE_PIN          22
 
-#define X_STEP_PIN         54 //A0
-#define X_DIR_PIN          55 //A1
-#define X_ENABLE_PIN       38
-#define X_MIN_PIN           3 //3
-#define X_MAX_PIN          -1 //2
+  //Modular Tool #4 *********** //SMT nozzle
+  #define TOOL4_ENABLE_PIN   34
+  #define TOOL4_DOUT_PIN     26
+  #define TOOL4_AIN_PIN      A14
+  #define VACUUM_PIN         26 //
 
-#define Y_STEP_PIN         60 //A6
-#define Y_DIR_PIN          61 //A7
-#define Y_ENABLE_PIN       56 //A2
-#define Y_MIN_PIN          14 //seems fried on current 2560 //14
-#define Y_MAX_PIN          -1 //15
+  #define HEATER_1_PIN       46 //Spare / un-connected pin!  This is a hack until I've added the logic to handle non-hotend E axis... Right now this would error out if set to -1
+  #define TEMP_1_PIN         14 // A14 // ANALOG NUMBERING!! Extruder 1
 
-#define Z_STEP_PIN         46
-#define Z_DIR_PIN          48
-#define Z_ENABLE_PIN       62 //A8
-#define Z_MIN_PIN          18 //18
-#define Z_MAX_PIN          -1 //19 (auto Z leveling probe)
+  //Modular Tool Mapping ***********
+#ifdef FPD_3DPRINTING
+  #define HEATER_0_PIN       TOOL2_DOUT_PIN // Extruder 3 
+  #define TEMP_0_PIN         13 // A13 //ANALOG NUMBERING!!!
+  #define E0_ENABLE_PIN      TOOL2_ENABLE_PIN
+#else
+  #define HEATER_0_PIN       48 //Spare / un-connected pin!  This is a hack until I've added the logic to handle non-hotend E axis... Right now this would error out if set to -1
+  #define TEMP_0_PIN         13 // A13 //ANALOG NUMBERING!!!
+  #define E0_ENABLE_PIN      TOOL4_ENABLE_PIN
+#endif
 
-#define E0_STEP_PIN        26
-#define E0_DIR_PIN         28
-#define E0_ENABLE_PIN      24
+  #define HEATER_2_PIN       -1
+  #define TEMP_2_PIN         -1 // Extruder 2
 
-#define E1_STEP_PIN        36
-#define E1_DIR_PIN         34
-#define E1_ENABLE_PIN      30
+  #define LED_PIN            13
+  #define FAN_PIN            10 //PLA fan
+  #define PS_ON_PIN          28 //ATX power supply with BSS138 MOSFET (Set HIGH to GROUND the pin)
+  #define ESTOP_PIN          12
 
-#define LED_PIN            13
+  //Lighting
+  #define LEDRING_UP_PIN     4
+  #define LEDRING_DN_PIN     5
+  
+  //#define SERVO0_PIN         4 //X [0]
+  //#define SERVO1_PIN         5 //Y [1]
+  //#define SERVO2_PIN         6 //Z [2]
+  //#define SERVO3_PIN         7 //  [3]
 
-#define FAN_PIN            -1 // (Sprinter config)
-
-#define PS_ON_PIN          12
-
-//MOSFETS:
-#define HEATER_0_PIN       10   // D10 EXTRUDER 1
-#define HEATER_1_PIN       -1   // D9  (Use this for VACUUM instead!)
-#define HEATER_2_PIN       -1   // N/C on RAMPS
-#define HEATER_BED_PIN     8    // BED +12V2, 11A
-
-//ANALOG / THERMISTORS:
-#define TEMP_0_PIN         13   // A13 
-#define TEMP_1_PIN         15   // A15 
-#define TEMP_2_PIN         -1   // N/C on RAMPS
-#define TEMP_BED_PIN       14   // A14 
-
-
-
-//// SPI for Max6675 Thermocouple
-//
-//#ifndef SDSUPPORT
-//// these pins are defined in the SD library if building with SD support
-//  #define MAX_SCK_PIN          52
-//  #define MAX_MISO_PIN         50
-//  #define MAX_MOSI_PIN         51
-//  #define MAX6675_SS       53
-//#else
-//  #define MAX6675_SS       49
-//#endif
+#endif //EMC02 pinout
 
 
 

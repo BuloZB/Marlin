@@ -13,9 +13,9 @@
 #define SERIAL_PORT 0
 
 // This determines the communication speed of the printer
-#define BAUDRATE 115200
+#define BAUDRATE 250000
 
-#define MOTHERBOARD 33 //RAMPS 1.4 (Power outputs: Extruder, Fan, Bed)
+#define MOTHERBOARD 642 //EMC02 rev B
 
 // Define this to set a custom name for your generic Mendel,
  #define CUSTOM_MENDEL_NAME "FirePick Delta"
@@ -31,6 +31,9 @@
 
 // Define this to have the electronics keep the power supply off on startup. If you don't know what this is leave it.
 // #define PS_DEFAULT_OFF
+
+//#define FPD_3DPRINTING
+
 
 //===========================================================================
 //=============================Thermal Settings  ============================
@@ -70,7 +73,7 @@
 #define TEMP_SENSOR_0 5
 #define TEMP_SENSOR_1 0
 #define TEMP_SENSOR_2 0
-#define TEMP_SENSOR_BED 1
+#define TEMP_SENSOR_BED 0
 
 // This makes temp sensor 1 a redundant sensor for sensor 0. If the temperatures difference between these sensors is to high the print will be aborted.
 //#define TEMP_SENSOR_1_AS_REDUNDANT
@@ -393,13 +396,21 @@ const bool Z_MAX_ENDSTOP_INVERTING = false; // set to true to invert the logic o
 #define PULLEY_REDUCTION BIG_PULLEY_TEETH/SMALL_PULLEY_TEETH
 #define XYZ_STEPS (XYZ_FULL_STEPS_PER_ROTATION*XYZ_MICROSTEPS*PULLEY_REDUCTION)/360.0
 
-//For Delta configuration: Units are degrees! That is, steps per degree
-//#define DEFAULT_AXIS_STEPS_PER_UNIT   {80, 80, 80, 100}
-#define DEFAULT_AXIS_STEPS_PER_UNIT   {XYZ_STEPS, XYZ_STEPS, XYZ_STEPS, 8.8888}
-#define DEFAULT_MAX_FEEDRATE          {5000, 5000, 5000, 10000}    // (mm/sec)
-#define DEFAULT_MAX_ACCELERATION      {3000,3000,3000,10000}    // X, Y, Z, E maximum start speed for accelerated moves. E default values are good for skeinforge 40+, for older versions raise them a lot.
 
-#define DEFAULT_ACCELERATION          3000//10000    // X, Y, Z and E max acceleration in mm/s^2 for printing moves
+#ifdef FPD_3DPRINTING
+  #define E_STEPS_FPD 903.0
+  #define E_FEEDRATE_FPD 15
+#else
+  #define E_STEPS_FPD 8.88888
+  #define E_FEEDRATE_FPD 10000
+#endif
+
+//For Delta configuration: Units are degrees! That is, steps per degree
+#define DEFAULT_AXIS_STEPS_PER_UNIT   {XYZ_STEPS, XYZ_STEPS, XYZ_STEPS, E_STEPS_FPD}
+#define DEFAULT_MAX_FEEDRATE          {1000, 1000, 1000, E_FEEDRATE_FPD}    // (mm/sec)
+#define DEFAULT_MAX_ACCELERATION      {250,250,250,100}    // X, Y, Z, E maximum start speed for accelerated moves. E default values are good for skeinforge 40+, for older versions raise them a lot.
+
+#define DEFAULT_ACCELERATION          500//10000    // X, Y, Z and E max acceleration in mm/s^2 for printing moves
 #define DEFAULT_RETRACT_ACCELERATION  3000   // X, Y, Z and E max acceleration in mm/s^2 for retracts
 
 // Offset of the extruders (uncomment if using more than one and relying on firmware to position when changing).
