@@ -27,7 +27,7 @@
 // This defines the number of extruders
 #define EXTRUDERS 1
 
-#define POWER_SUPPLY 1 //ATX
+#define POWER_SUPPLY 2 //ATX (with inverted logic)
 
 // Define this to have the electronics keep the power supply off on startup. If you don't know what this is leave it.
 // #define PS_DEFAULT_OFF
