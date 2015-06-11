@@ -636,6 +636,40 @@ const short temptable_20[][2] PROGMEM = {
 };
 #endif
 
+#if (THERMISTORHEATER_0 == 50) || (THERMISTORHEATER_1 == 50) || (THERMISTORHEATER_2 == 50) || (THERMISTORBED == 50)
+// NTC 100K Thermistor (http://www.robotdigg.com/product/76/100K-Glass-sealed-Thermistor)
+// Made with createTemperatureLookup.py (https://github.com/reprap/firmware/blob/96b7fb5962b7a45ee6d4b3c2067774f1e2c9568a/createTemperatureLookup.py)
+// ./createTemperatureLookup.py --r0=100000 --t0=25 --r1=0 --r2=4700 --beta=3950 --max-adc=1023
+// r0: 100000
+// t0: 25
+// r1: 0
+// r2: 4700
+// beta: 3950
+// max adc: 1023
+const short temptable_50[][2] PROGMEM = {
+   {1*OVERSAMPLENR, 938},
+   {54*OVERSAMPLENR, 267},
+   {107*OVERSAMPLENR, 217},
+   {160*OVERSAMPLENR, 191},
+   {213*OVERSAMPLENR, 172},
+   {266*OVERSAMPLENR, 158},
+   {319*OVERSAMPLENR, 147},
+   {372*OVERSAMPLENR, 137},
+   {425*OVERSAMPLENR, 127},
+   {478*OVERSAMPLENR, 119},
+   {531*OVERSAMPLENR, 111},
+   {584*OVERSAMPLENR, 103},
+   {637*OVERSAMPLENR, 96},
+   {690*OVERSAMPLENR, 88},
+   {743*OVERSAMPLENR, 80},
+   {796*OVERSAMPLENR, 72},
+   {849*OVERSAMPLENR, 62},
+   {902*OVERSAMPLENR, 50},
+   {955*OVERSAMPLENR, 35},
+   {1008*OVERSAMPLENR, 2}
+};
+#endif
+
 #if (THERMISTORHEATER_0 == 51) || (THERMISTORHEATER_1 == 51) || (THERMISTORHEATER_2 == 51) || (THERMISTORBED == 51)
 // 100k EPCOS (WITH 1kohm RESISTOR FOR PULLUP, R9 ON SANGUINOLOLU! NOT FOR 4.7kohm PULLUP! THIS IS NOT NORMAL!)
 // Verified by linagee.

@@ -57,6 +57,7 @@
 // 9 is 100k GE Sensing AL03006-58.2K-97-G1 (4.7k pullup)
 // 10 is 100k RS thermistor 198-961 (4.7k pullup)
 // 20 is the PT100 circuit found in the Ultimainboard V2.x
+// 50 is the NTC 100K Thermistor (http://www.robotdigg.com/product/76/100K-Glass-sealed-Thermistor)
 // 60 is 100k Maker's Tool Works Kapton Bed Thermistor
 //
 //    1k ohm pullup tables - This is not normal, you would have to have changed out your 4.7k for 1k
