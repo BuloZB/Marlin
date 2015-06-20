@@ -96,8 +96,8 @@
   #define ESTOP_PIN          12
 
   //Lighting
-  #define LEDRING_UP_PIN     4
-  #define LEDRING_DN_PIN     5
+  #define LEDRING_UP_PIN     4 // SERVO1
+  #define LEDRING_DN_PIN     5 // SERVO2
   
   //#define SERVO0_PIN         4 //X [0]
   //#define SERVO1_PIN         5 //Y [1]
